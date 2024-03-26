@@ -1,9 +1,12 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-function displayImages(images) {
-    const gallery = document.querySelector('.gallery');
-    gallery.innerHTML = '';
+function displayImages(images, isLoadMore, gallerySelector) {
+    const gallery = document.querySelector(gallerySelector);
+    
+    if (!isLoadMore) {
+        gallery.innerHTML = '';
+    }
 
     images.forEach(image => {
         const listItem = document.createElement('li');
@@ -47,20 +50,8 @@ function displayImages(images) {
         gallery.appendChild(listItem);
     });
 
-    // Initialize lightbox after rendering images
     const lightbox = new SimpleLightbox('.gallery a');
-
-    const closeModal = () => {
-        lightbox.close();
-    };
-
-    document.querySelector('.gallery').addEventListener('click', closeModal);
-
-    const refreshLightbox = () => {
-        lightbox.refresh();
-    };
-
-    refreshLightbox();
+    lightbox.refresh();
 }
 
 export { displayImages };
