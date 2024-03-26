@@ -76,4 +76,5 @@ function showEndOfResultsMessage() {
     });
 }
 
+
 export { pixabaySearch, showErrorToast, showEndOfResultsMessage };
