@@ -1,11 +1,12 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+// render-functions.js
 
-function displayImages(images, isLoadMore, gallerySelector) {
-    const gallery = document.querySelector(gallerySelector);
-    
+import SimpleLightbox from "simplelightbox";
+
+function displayImages(images, isLoadMore) {
+    const gallery = document.querySelector('.gallery');
+
     if (!isLoadMore) {
-        gallery.innerHTML = '';
+        gallery.innerHTML = ''; // Clear gallery if it's a new search
     }
 
     images.forEach(image => {
@@ -50,6 +51,7 @@ function displayImages(images, isLoadMore, gallerySelector) {
         gallery.appendChild(listItem);
     });
 
+    // Initialize or refresh lightbox after rendering images
     const lightbox = new SimpleLightbox('.gallery a');
     lightbox.refresh();
 }

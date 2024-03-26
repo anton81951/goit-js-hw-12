@@ -1,21 +1,25 @@
-import axios from "axios";
 import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+import axios from "axios";
+import { displayImages } from "./render-functions";
 
+const apiKey = '9233093-942588744ee96c4f575017f3e';
 let currentPage = 1;
 const resultsPerPage = 15;
-const apiKey = '9233093-942588744ee96c4f575017f3e';
 let totalHits = 0;
 
 async function pixabaySearch(isLoadMore) {
     const input = document.querySelector('.input');
     const searchInput = input.value.trim();
-    const loader = document.querySelector('.loader');
 
     if (searchInput === "") {
+        const loadBtn = document.querySelector(".loadbtn");
+        loadBtn.style.display = 'none';
         showErrorToast("Empty input!");
         return;
     }
 
+    const loader = document.querySelector('.loader');
     loader.style.display = 'block';
 
     let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}`;
@@ -36,11 +40,12 @@ async function pixabaySearch(isLoadMore) {
         } else {
             totalHits = data.totalHits;
             const imagesToDisplay = data.hits.slice(0, resultsPerPage);
-            displayImages(imagesToDisplay, isLoadMore, '.gallery');
-            const loadBtn = document.querySelector(".loadbtn");
+            displayImages(imagesToDisplay, isLoadMore);
             if (!isLoadMore) {
+                const loadBtn = document.querySelector(".loadbtn");
                 loadBtn.style.display = 'block';
             } else if (totalHits <= currentPage * resultsPerPage) {
+                const loadBtn = document.querySelector(".loadbtn");
                 loadBtn.style.display = 'none';
                 if (totalHits > resultsPerPage) {
                     showEndOfResultsMessage();
@@ -49,7 +54,7 @@ async function pixabaySearch(isLoadMore) {
         }
     } catch (error) {
         console.error('axios problem', error);
-        showErrorToast('An error occurred while fetching images. Please try again later.');
+        showErrorToast('axios problem');
     } finally {
         loader.style.display = 'none';
     }
@@ -71,4 +76,4 @@ function showEndOfResultsMessage() {
     });
 }
 
-export { pixabaySearch };
+export { pixabaySearch, showErrorToast, showEndOfResultsMessage };
