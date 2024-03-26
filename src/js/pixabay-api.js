@@ -1,6 +1,7 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import { displayImages } from "./render-functions";
+import axios from "axios";
 
 document.querySelector(".form").addEventListener("submit", event => {
   event?.preventDefault();
@@ -20,9 +21,9 @@ function pixabaySearch(event) {
     const apiKey = '9233093-942588744ee96c4f575017f3e';
     const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true`;
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
+    axios.get(url)
+      .then(response => {
+        const data = response.data;
         if (data.hits.length === 0) {
           if (!errorMessageShown) {
             iziToast.error({
@@ -33,11 +34,13 @@ function pixabaySearch(event) {
             errorMessageShown = true;
           }
         } else {
-          displayImages(data.hits);
+          // Slice the first 15 results
+          const first15Results = data.hits.slice(0, 15);
+          displayImages(first15Results);
         }
       })
       .catch(error => {
-        console.error('fetch problem', error);
+        console.error('axios problem', error);
       });
   } else {
     iziToast.error({
@@ -49,4 +52,3 @@ function pixabaySearch(event) {
 }
 
 export { pixabaySearch };
-
