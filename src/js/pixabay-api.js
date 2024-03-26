@@ -37,6 +37,7 @@ async function pixabaySearch(isLoadMore) {
         if (data.hits.length === 0) {
             const errorMessage = isLoadMore ? "Sorry, there are no more images to load." : "Sorry, there are no images matching your search query. Please try again!";
             showErrorToast(errorMessage);
+            document.querySelector(".form").reset();
         } else {
             totalHits = data.totalHits;
             const imagesToDisplay = data.hits.slice(0, resultsPerPage);
