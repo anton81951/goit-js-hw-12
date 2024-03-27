@@ -1,12 +1,12 @@
-// render-functions.js
-
 import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 
 function displayImages(images, isLoadMore) {
     const gallery = document.querySelector('.gallery');
 
     if (!isLoadMore) {
-        gallery.innerHTML = ''; // Clear gallery if it's a new search
+        gallery.innerHTML = '';
     }
 
     images.forEach(image => {
@@ -51,7 +51,6 @@ function displayImages(images, isLoadMore) {
         gallery.appendChild(listItem);
     });
 
-    // Initialize or refresh lightbox after rendering images
     const lightbox = new SimpleLightbox('.gallery a');
     lightbox.refresh();
 }
