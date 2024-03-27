@@ -30,20 +30,14 @@ document.querySelector(".form").addEventListener("submit", async (event) => {
     }
 });
 
-document.querySelector(".loadbtn").addEventListener("click", () => {
+document.querySelector(".loadbtn").addEventListener("click", async () => {
     loader.style.display = 'block';
-    pixabaySearch(true);
-    if (loadBtn.style.display !== 'none') {
-        const galleryItemHeight = document.querySelector('.smallImage').getBoundingClientRect().height;
-        const scrollAmount = galleryItemHeight * 20;
-        window.scrollBy({
-            top: scrollAmount,
-            behavior: 'smooth'
-        });
-    }
-});
+    await pixabaySearch(true);
+    loader.style.display = 'none';
 
-let currentPage = 1;
-const resultsPerPage = 15;
-const apiKey = '9233093-942588744ee96c4f575017f3e';
-let totalHits = 0;
+    const galleryHeight = gallery.offsetHeight;
+    window.scrollBy({
+        top: galleryHeight / 2,
+        behavior: 'smooth'
+    });
+});

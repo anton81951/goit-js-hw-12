@@ -11,29 +11,21 @@ let totalHits = 0;
 async function pixabaySearch(isLoadMore) {
     const input = document.querySelector('.input');
     const searchInput = input.value.trim();
-
     if (searchInput === "") {
-        const loadBtn = document.querySelector(".loadbtn");
-        loadBtn.style.display = 'none';
         showErrorToast("Empty input!");
         return;
     }
-
     const loader = document.querySelector('.loader');
     loader.style.display = 'block';
-
-    let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}`;
-
-    if (isLoadMore) {
-        currentPage++;
-    } else {
+    if (!isLoadMore) {
         currentPage = 1;
+    } else {
+        currentPage++;
     }
-
+    let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}`;
     try {
         const response = await axios.get(url);
         const data = response.data;
-
         if (data.hits.length === 0) {
             const errorMessage = isLoadMore ? "Sorry, there are no more images to load." : "Sorry, there are no images matching your search query. Please try again!";
             showErrorToast(errorMessage);
@@ -42,15 +34,14 @@ async function pixabaySearch(isLoadMore) {
             totalHits = data.totalHits;
             const imagesToDisplay = data.hits.slice(0, resultsPerPage);
             displayImages(imagesToDisplay, isLoadMore);
-            if (!isLoadMore) {
-                const loadBtn = document.querySelector(".loadbtn");
-                loadBtn.style.display = 'block';
-            } else if (totalHits <= currentPage * resultsPerPage) {
-                const loadBtn = document.querySelector(".loadbtn");
+            const loadBtn = document.querySelector(".loadbtn");
+            if (totalHits <= currentPage * resultsPerPage) {
                 loadBtn.style.display = 'none';
-                if (totalHits > resultsPerPage) {
+                if (totalHits > resultsPerPage && !isLoadMore) {
                     showEndOfResultsMessage();
                 }
+            } else {
+                loadBtn.style.display = 'block';
             }
         }
     } catch (error) {
