@@ -7,22 +7,30 @@ const apiKey = '9233093-942588744ee96c4f575017f3e';
 let currentPage = 1;
 const resultsPerPage = 15;
 let totalHits = 0;
+let searchInputValue = '';
 
 async function pixabaySearch(isLoadMore) {
     const input = document.querySelector('.input');
-    const searchInput = input.value.trim();
-    if (searchInput === "") {
+    const currentSearchInput = input.value.trim();
+
+    const loadBtn = document.querySelector(".loadbtn");
+    loadBtn.style.display = 'none';
+
+    if (!isLoadMore) {
+        currentPage = 1;
+        searchInputValue = currentSearchInput;
+    }
+
+    if (searchInputValue === "") {
         showErrorToast("Empty input!");
         return;
     }
+
     const loader = document.querySelector('.loader');
     loader.style.display = 'block';
-    if (!isLoadMore) {
-        currentPage = 1;
-    } else {
-        currentPage++;
-    }
-    let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}`;
+
+    let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchInputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}`;
+
     try {
         const response = await axios.get(url);
         const data = response.data;
@@ -30,11 +38,12 @@ async function pixabaySearch(isLoadMore) {
             const errorMessage = isLoadMore ? "Sorry, there are no more images to load." : "Sorry, there are no images matching your search query. Please try again!";
             showErrorToast(errorMessage);
             document.querySelector(".form").reset();
+            loadBtn.style.display = 'none';
         } else {
             totalHits = data.totalHits;
             const imagesToDisplay = data.hits.slice(0, resultsPerPage);
             displayImages(imagesToDisplay, isLoadMore);
-            const loadBtn = document.querySelector(".loadbtn");
+            input.value = "";
             if (totalHits <= currentPage * resultsPerPage) {
                 loadBtn.style.display = 'none';
                 if (totalHits > resultsPerPage && !isLoadMore) {
@@ -47,6 +56,7 @@ async function pixabaySearch(isLoadMore) {
     } catch (error) {
         console.error('axios problem', error);
         showErrorToast('axios problem');
+        loadBtn.style.display = 'none';
     } finally {
         loader.style.display = 'none';
     }
@@ -68,5 +78,4 @@ function showEndOfResultsMessage() {
     });
 }
 
-
-export { pixabaySearch, showErrorToast, showEndOfResultsMessage };
+export { pixabaySearch, showErrorToast, showEndOfResultsMessage, searchInputValue };

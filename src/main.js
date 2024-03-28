@@ -8,6 +8,9 @@ import { pixabaySearch, showErrorToast, showEndOfResultsMessage } from "./js/pix
 
 const gallery = document.querySelector('.gallery');
 const loader = document.createElement('div');
+
+// let searchInputValue = '';
+
 loader.style.display = 'none';
 loader.classList.add('loader');
 document.body.appendChild(loader);
