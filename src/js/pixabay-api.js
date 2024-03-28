@@ -4,7 +4,7 @@ import axios from "axios";
 import { displayImages } from "./render-functions";
 
 const apiKey = '9233093-942588744ee96c4f575017f3e';
-let currentPage = 1;
+let currentPage=1;
 const resultsPerPage = 15;
 let totalHits = 0;
 let searchInputValue = '';
@@ -17,7 +17,6 @@ async function pixabaySearch(isLoadMore) {
     loadBtn.style.display = 'none';
 
     if (!isLoadMore) {
-        currentPage = 1;
         searchInputValue = currentSearchInput;
     }
 
