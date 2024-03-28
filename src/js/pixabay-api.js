@@ -21,6 +21,10 @@ async function pixabaySearch(isLoadMore) {
         searchInputValue = currentSearchInput;
     }
 
+    if (isLoadMore) {
+        currentPage++;
+    }
+
     if (searchInputValue === "") {
         showErrorToast("Empty input!");
         return;
